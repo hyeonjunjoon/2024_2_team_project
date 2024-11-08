@@ -25,10 +25,9 @@ public class Login_Activity extends AppCompatActivity {
     private EditText etEmail, etPwd;
     private TextView tvIncorrectPwd;
     private Button btnLogin;
-    ImageButton backPressBtn;
+    ImageButton imgBtnBackPress;
 
     public void shakeTextView(TextView textView) {
-        // X축으로 흔들리는 애니메이션 정의
         ObjectAnimator shakeAnim = ObjectAnimator.ofFloat(textView, "translationX", -10f, 10f);
         shakeAnim.setDuration(50); // 1 진동당 시간
         shakeAnim.setRepeatCount(5); // 반복 횟수
@@ -45,7 +44,7 @@ public class Login_Activity extends AppCompatActivity {
         etEmail = findViewById(R.id.inLogAct_email);
         etPwd = findViewById(R.id.inLogAct_Pwd);
         btnLogin = findViewById(R.id.inLoginAct_login_btn);
-        backPressBtn = findViewById(R.id.inLoginActBackPress);
+        imgBtnBackPress = findViewById(R.id.inLoginActBackPress);
         tvIncorrectPwd = findViewById(R.id.inLogAct_incorrectIdPwd);
 
         tvIncorrectPwd.setVisibility(View.INVISIBLE);
@@ -87,7 +86,7 @@ public class Login_Activity extends AppCompatActivity {
         });
 
         // 뒤로 가기 버튼 클릭 리스너
-        backPressBtn.setOnClickListener(new View.OnClickListener() {
+        imgBtnBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
