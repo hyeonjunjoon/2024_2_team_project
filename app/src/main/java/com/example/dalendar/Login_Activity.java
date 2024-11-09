@@ -73,7 +73,7 @@ public class Login_Activity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Intent intent = new Intent(Login_Activity.this, Register_Activity.class);
+                                    Intent intent = new Intent(Login_Activity.this, Calendar_Activity.class);
                                     startActivity(intent);
                                 } else {
                                     shakeTextView(tvIncorrectPwd);

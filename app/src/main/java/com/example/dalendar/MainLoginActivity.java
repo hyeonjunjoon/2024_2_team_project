@@ -33,7 +33,7 @@ public class MainLoginActivity extends AppCompatActivity {
         reg_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Calendar_Activity.class);
+                Intent intent = new Intent(getApplicationContext(), Register_Activity.class);
                 startActivity(intent);
             }
         });
