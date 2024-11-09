@@ -46,7 +46,8 @@
             android:id="@+id/inMainCal_dayLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/tvSun"
@@ -138,7 +139,8 @@
             <LinearLayout
                 android:id="@+id/inMainCal_1stweekLL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_line">
 
                 <TextView
                     android:id="@+id/inMainCal_1dateTv"
@@ -211,12 +213,14 @@
                     android:text="7"
                     android:textSize="30dp" />
 
+
             </LinearLayout>
-        <!--(((((((((((((((((1주 끝))))))))))))))-->
+            
             <LinearLayout
                 android:id="@+id/inMainCal_2stweekLL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_line">
 
                 <TextView
                     android:id="@+id/inMainCal_8dateTv"
@@ -294,7 +298,8 @@
             <LinearLayout
                 android:id="@+id/inMainCal_3rdweekLL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_line">
 
                 <TextView
                     android:id="@+id/inMainCal_15dateTv"
@@ -372,7 +377,8 @@
             <LinearLayout
                 android:id="@+id/inMainCal_4thweekLL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_line">
 
                 <TextView
                     android:id="@+id/inMainCal_22dateTv"
