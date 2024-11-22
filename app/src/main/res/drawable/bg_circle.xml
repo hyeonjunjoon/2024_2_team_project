@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="#7B5A8D"/> <!-- 동그라미 색상 (예: 보라색) -->
+    <size android:width="100dp" android:height="100dp"/> <!-- 동그라미 크기 -->
+</shape>

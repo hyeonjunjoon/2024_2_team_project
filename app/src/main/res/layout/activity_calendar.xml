@@ -23,20 +23,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:gravity="right|bottom"
+                android:gravity="end|bottom"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="35dp"
+                android:textSize="35sp"
                 android:text="2024"/>
 
             <TextView
-                android:layout_marginStart="1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/jomhuria"
+                android:layout_marginStart="1dp"
                 android:layout_weight="3"
+                android:fontFamily="@font/jomhuria"
+                android:text=" 11"
                 android:textColor="@color/orgin_purple"
-                android:textSize="65dp"
-                android:text=" 11"/>
+                android:textSize="65dp" />
 
         </LinearLayout>
 
@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:text="Sun"
                 android:textColor="@color/orgin_purple"/>
 
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:layout_weight="1"
                 android:text="Mon"
                 android:textColor="@color/orgin_purple"/>
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:layout_weight="1"
                 android:text="Tue"
                 android:textColor="@color/orgin_purple"/>
@@ -89,7 +89,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:text="Wed"
                 android:textColor="@color/orgin_purple"/>
 
@@ -100,7 +100,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:text="Thr"
                 android:textColor="@color/orgin_purple"/>
 
@@ -111,7 +111,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:text="Fri"
                 android:textColor="@color/orgin_purple"/>
 
@@ -122,7 +122,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="@font/jomhuria"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:text="Sat"
                 android:textColor="@color/orgin_purple"/>
 
@@ -524,15 +524,10 @@
                     android:text=""
                     android:textSize="30dp" />
 
-
-
-
             </LinearLayout>
 
-
-
-
         </LinearLayout>
+
 
 
     </LinearLayout>
