@@ -5,24 +5,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.List;
 
 public class CalendarFragment extends Fragment {
 
@@ -35,9 +33,7 @@ public class CalendarFragment extends Fragment {
     private TextView monthYearText;
     private LocalDate selectedDate;
 
-
     public CalendarFragment() {
-        // Required empty public constructor
     }
     public static CalendarFragment newInstance(String param1, String param2) {
         CalendarFragment fragment = new CalendarFragment();
@@ -95,7 +91,6 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-
     } //onViewCreated
 
     private String monthyearFromDate(LocalDate date){
@@ -108,11 +103,40 @@ public class CalendarFragment extends Fragment {
 
         ArrayList<String> dayList = daysInMonthArray(selectedDate);
 
-        CalendarAdapter adapter = new CalendarAdapter(dayList);
+        // 주 단위로 나누기
+        List<List<String>> weeks = new ArrayList<>();
+        for (int i = 0; i < dayList.size(); i += 7) {
+            weeks.add(dayList.subList(i, Math.min(i + 7, dayList.size())));
+        }
 
-        // 7열 GridLayoutManager 설정
-        RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 7);
+        // 어댑터에 주 클릭 이벤트 전달
+        WeekAdapter adapter = new WeekAdapter(weeks, new WeekAdapter.OnWeekClickListener() {
+            @Override
+            public void onWeekClick(int weekIndex, List<String> weekDates) {
+                // 클릭 이벤트 처리
+                WeekDetailFragment weekDetailFragment = new WeekDetailFragment();
 
+                // 데이터를 전달할 Bundle 생성
+                Bundle bundle = new Bundle();
+                bundle.putInt("weekIndex", weekIndex + 1);
+                bundle.putStringArrayList("weekDates", new ArrayList<>(weekDates)); // List를 ArrayList로 변환
+                bundle.putString("year", monthYearText.getText().toString());
+
+                // Bundle을 Fragment에 설정
+                weekDetailFragment.setArguments(bundle);
+
+                // Fragment 교체
+                getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main, weekDetailFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        // RecyclerView 설정
+        RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), 1); // 한 행씩 표시
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
     }
@@ -135,6 +159,8 @@ public class CalendarFragment extends Fragment {
         // 공백 채우기 (첫 번째 날 이전의 빈 칸)
         for (int i = 0; i < dayOfWeek; i++) {
             dayList.add("");
+
+
         }
 
         // 실제 날짜 채우기

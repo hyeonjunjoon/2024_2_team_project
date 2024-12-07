@@ -19,9 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_bar);
 
-        if (savedInstanceState == null) {
-            transferTo(CalendarFragment.newInstance("param1", "param2"));
-        }
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -59,9 +56,16 @@ public class MainActivity extends AppCompatActivity {
                 //아무 일도 안 함 (무지성 새로고침 개념의 창 띄우기 방지)
             }
         });
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, CalendarFragment.newInstance("param1", "param2"))
+                .commit();
+
     } //onCreated
 
+
     private void transferTo(Fragment fragment){
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();

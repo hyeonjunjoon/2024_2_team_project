@@ -1,16 +1,21 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 전체 투명 배경 -->
+    <!-- 투명 배경 -->
     <item>
         <shape android:shape="rectangle">
+            <!-- 배경 투명 -->
             <solid android:color="@android:color/transparent" />
+            <!-- 모서리 곡률 추가 -->
+            <corners android:radius="10dp" />
         </shape>
     </item>
 
-    <!-- 하단에만 선 추가 -->
-    <item android:gravity="bottom">
+    <!-- 외곽선 -->
+    <item>
         <shape android:shape="rectangle">
-            <solid android:color="#C7C7C7" /> <!-- 선 색상 -->
-            <size android:height="1dp" /> <!-- 선 두께 -->
+            <!-- 외곽선 색상 -->
+            <stroke android:width="1dp" android:color="#111111" />
+            <!-- 모서리 곡률 추가 -->
+            <corners android:radius="10dp" />
         </shape>
     </item>
 </layer-list>

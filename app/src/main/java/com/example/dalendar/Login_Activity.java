@@ -15,8 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 public class Login_Activity extends AppCompatActivity {
@@ -73,7 +75,8 @@ public class Login_Activity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Intent intent = new Intent(Login_Activity.this, Calendar_Activity.class);
+//                                    FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                                    Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                                     startActivity(intent);
                                 } else {
                                     shakeTextView(tvIncorrectPwd);
