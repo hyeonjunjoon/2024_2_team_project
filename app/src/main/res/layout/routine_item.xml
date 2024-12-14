@@ -1,0 +1,88 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:radius="50dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- 이미지 -->
+        <ImageView
+            android:id="@+id/routine_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_app_icons"
+            android:scaleType="centerCrop"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <!-- 루틴 이름 -->
+        <TextView
+            android:id="@+id/routine_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/routine_image"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="routine act name"
+            android:textColor="#5A3456"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- 메모 -->
+        <TextView
+            android:id="@+id/routine_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/routine_name"
+            android:layout_toEndOf="@id/routine_image"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="routine memo"
+            android:textSize="14sp"
+            android:textColor="#555555" />
+
+        <!-- 요일 -->
+        <TextView
+            android:id="@+id/routine_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/routine_memo"
+            android:layout_toStartOf="@id/routine_time"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:text="매일 오전"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <!-- 알람 시간 -->
+        <TextView
+            android:id="@+id/routine_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/routine_switch"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:text="08:00"
+            android:textColor="#666666"
+            android:textSize="36sp" />
+
+        <!-- 스위치 -->
+        <Switch
+            android:id="@+id/routine_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text=" "
+            android:layout_marginTop="4dp" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -129,7 +129,7 @@ public class CalendarFragment extends Fragment {
                 getActivity()
                         .getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main, weekDetailFragment)
+                        .replace(R.id.fragment_container, weekDetailFragment)
                         .addToBackStack(null)
                         .commit();
             }
