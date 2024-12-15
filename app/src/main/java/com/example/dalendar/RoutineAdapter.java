@@ -24,23 +24,17 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineV
     private List<Routine> routineList;
     private Context context;
 
-    public RoutineAdapter(List<Routine> routineList) {
+    public RoutineAdapter(List<Routine> routineList, Context context) {
         this.routineList = routineList;
+        this.context = this.context; // context 초기화
     }
+
 
     @NonNull
     @Override
     public RoutineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.routine_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.routine_item, parent, false);
         return new RoutineViewHolder(view);
-    }
-
-    private SaveRoutineCallback callback;
-
-    public RoutineAdapter(List<Routine> routineList, SaveRoutineCallback callback) {
-        this.routineList = routineList;
-        this.callback = callback;
     }
 
     @Override
@@ -49,35 +43,24 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineV
 
         holder.nameTextView.setText(routine.getName());
         holder.memoTextView.setText(routine.getMemo());
-        holder.daysTextView.setText(routine.getDays()); // 요일 데이터 설정
-        String displayTime = routine.getTime();
-        holder.timeTextView.setText(displayTime);
+        holder.timeTextView.setText(routine.getTime());
+        holder.daysTextView.setText(routine.getDays());
+        holder.itemView.setBackgroundColor(Color.parseColor(routine.getColor()));
 
-        // 이미지 경로 처리
+        // 이미지 설정
         if (routine.getImagePath() != null && !routine.getImagePath().isEmpty()) {
             Uri imageUri = Uri.parse(routine.getImagePath());
             holder.imageView.setImageURI(imageUri);
         } else {
-            holder.imageView.setImageResource(R.drawable.ic_app_icons); // 기본 이미지 설정
+            holder.imageView.setImageResource(R.drawable.ic_app_icons); // 기본 이미지
         }
-
-        holder.itemView.setBackgroundColor(Color.parseColor(routine.getColor()));
 
         holder.alarmSwitch.setChecked(routine.isEnabled());
         holder.alarmSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // 스위치 상태 변경에 따라 알람 활성화/비활성화
             routine.setEnabled(isChecked);
-            toggleAlarm(position, isChecked, routine);
-            if (callback != null) {
-                callback.saveRoutinesToPreferences(); // 저장 콜백 호출
-            }
+            toggleAlarm(isChecked, routine);
         });
     }
-
-    public interface SaveRoutineCallback {
-        void saveRoutinesToPreferences();
-    }
-
 
     @Override
     public int getItemCount() {
@@ -94,77 +77,43 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineV
             nameTextView = itemView.findViewById(R.id.routine_name);
             memoTextView = itemView.findViewById(R.id.routine_memo);
             timeTextView = itemView.findViewById(R.id.routine_time);
-            daysTextView=itemView.findViewById(R.id.routine_days);
-            imageView = itemView.findViewById(R.id.routine_image); // ImageView 연결
+            daysTextView = itemView.findViewById(R.id.routine_days);
+            imageView = itemView.findViewById(R.id.routine_image);
             alarmSwitch = itemView.findViewById(R.id.routine_switch);
         }
     }
 
-    private void toggleAlarm(int requestCode, boolean isOn, Routine routine) {
+    private void toggleAlarm(boolean isOn, Routine routine) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
+                context, routine.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        if (alarmManager != null) {
-            if (isOn) {
-                try {
-                    // 알람 설정
-                    Calendar calendar = Calendar.getInstance();
+        if (isOn) {
+            Calendar calendar = Calendar.getInstance();
+            String[] timeParts = routine.getTime().split(" ");
+            String amPm = timeParts[0];
+            String[] hourMinute = timeParts[1].split(":");
 
-                    // 시간과 요일 정보 파싱
-                    String[] timeParts = routine.getTime().split(" ");
-                    String amPm = timeParts[0]; // "오전"/"오후"
-                    String[] hourMinute = timeParts[1].split(":");
-                    int hour = Integer.parseInt(hourMinute[0]);
-                    int minute = Integer.parseInt(hourMinute[1]);
+            int hour = Integer.parseInt(hourMinute[0]);
+            int minute = Integer.parseInt(hourMinute[1]);
 
-                    // AM/PM에 따라 시간 변환
-                    if (amPm.equalsIgnoreCase("PM") && hour != 12) hour += 12;
-                    if (amPm.equalsIgnoreCase("AM") && hour == 12) hour = 0;
+            if (amPm.equals("오후") && hour != 12) hour += 12;
+            if (amPm.equals("오전") && hour == 12) hour = 0;
 
-                    // 알람 설정 시간 지정
-                    calendar.set(Calendar.HOUR_OF_DAY, hour);
-                    calendar.set(Calendar.MINUTE, minute);
-                    calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
 
-                    // 알람이 과거면 다음날로 설정
-                    if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-                        calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    }
-
-                    // 알람 등록
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-                } catch (Exception e) {
-                    e.printStackTrace(); // 오류 로그 출력
-                }
-            } else {
-                // 알람 해제
-                alarmManager.cancel(pendingIntent);
-                pendingIntent.cancel();
+            if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
             }
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        } else {
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel(); // 확실히 PendingIntent 해제
         }
     }
-
-
-    // 요일 문자열을 Calendar 상수로 변환
-    private int getDayOfWeek(String day) {
-        switch (day) {
-            case "월": return Calendar.MONDAY;
-            case "화": return Calendar.TUESDAY;
-            case "수": return Calendar.WEDNESDAY;
-            case "목": return Calendar.THURSDAY;
-            case "금": return Calendar.FRIDAY;
-            case "토": return Calendar.SATURDAY;
-            case "일": return Calendar.SUNDAY;
-            default: return -1;
-        }
-    }
-
 
 }

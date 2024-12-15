@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                     transferTo(RoutinePlusFragment.newInstance("param1", "param2"));
                     return true;
                 }
-//
+
 //                if (itemId == R.id.page_3) {
 //                    transferTo(PlacesFragment.newInstance("param1", "param2"));
 //                    return true;

@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <!-- 상단 툴바 -->
     <TextView
         android:id="@+id/title_Login"
         android:layout_width="match_parent"
@@ -18,35 +17,35 @@
         android:text="내 정보"
         android:textColor="#000000"
         android:textSize="24dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
 
-    <!-- 프로필 이미지 -->
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:src="@drawable/arrow"
+        android:background="@drawable/shape_circle"
+        android:src="@drawable/people"
         android:scaleType="centerCrop"
         android:contentDescription="프로필 이미지" />
 
-    <!-- 닉네임 레이아웃 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:gravity="center_vertical">
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_med"
             android:text="닉네임"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginStart="16dp" />
 
-        <!-- 수정 아이콘 -->
         <ImageButton
             android:id="@+id/edit_nickname"
             android:layout_width="24dp"
@@ -56,7 +55,6 @@
 
     </LinearLayout>
 
-    <!-- 자기소개 입력 텍스트 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

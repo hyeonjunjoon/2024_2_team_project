@@ -75,13 +75,14 @@ public class Login_Activity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-//                                    FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                                    FirebaseUser user = mFirebaseAuth.getCurrentUser();
                                     Intent intent = new Intent(Login_Activity.this, MainActivity.class);
+                                    intent.putExtra("USER_ID", user.getUid());
                                     startActivity(intent);
                                 } else {
                                     shakeTextView(tvIncorrectPwd);
                                     tvIncorrectPwd.setVisibility(View.VISIBLE);
-                                    Toast.makeText(Login_Activity.this, "아이디와 비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(Login_Activity.this, "아이디와 비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

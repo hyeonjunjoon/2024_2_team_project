@@ -1,11 +1,16 @@
 package com.example.dalendar;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,11 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +27,19 @@ public class RoutineListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private String param1;
+    private String param2;
+
     private RecyclerView recyclerView;
     private RoutineAdapter adapter;
     private List<Routine> routineList;
+    private Context context;
 
     public RoutineListFragment() {
+        // Required empty public constructor
     }
 
+    // 프래그먼트 생성 시 인자를 전달하는 메서드
     public static RoutineListFragment newInstance(String param1, String param2) {
         RoutineListFragment fragment = new RoutineListFragment();
         Bundle args = new Bundle();
@@ -46,12 +50,9 @@ public class RoutineListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Nullable
@@ -60,76 +61,73 @@ public class RoutineListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_routine_list, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        // 루틴 리스트 초기화
         routineList = new ArrayList<>();
-        loadRoutinesFromPreferences(); // 데이터 로드
+        loadRoutinesFromPreferences();
 
-        // Routine_Maker로부터 데이터 받기
-        Intent intent = getActivity().getIntent();
-        if (intent != null && intent.hasExtra("actName")) {
-            String actName = intent.getStringExtra("actName");
-            String memo = intent.getStringExtra("memo");
-            String time = intent.getStringExtra("time");
-            String days = intent.getStringExtra("days");
-            String color = intent.getStringExtra("color");
-            boolean isEnabled = intent.getBooleanExtra("isEnabled", true);
-            String imagePath = intent.getStringExtra("imagePath");
 
-            if (!isRoutineAlreadyInList(actName, memo, time, days, color)) {
-                routineList.add(new Routine(actName, memo, time, isEnabled, days, color, imagePath));
-                saveRoutinesToPreferences();
+        adapter = new RoutineAdapter(routineList, context);
+        recyclerView.setAdapter(adapter);
+
+
+        // RoutineMakerFragment에서 전달된 데이터 확인 및 추가
+        if (getArguments() != null) {
+            String name = getArguments().getString("name");
+            String memo = getArguments().getString("memo");
+            String time = getArguments().getString("time");
+            String days = getArguments().getString("days");
+            String color = getArguments().getString("color");
+            String imagePath = getArguments().getString("imagePath");
+
+            if (name != null && memo != null) {
+                // 중복 확인 후 추가
+                if (!isRoutineAlreadyInList(name, memo, time, days, color)) {
+                    routineList.add(new Routine(name, memo, time, true, days, color, imagePath));
+                    saveRoutinesToPreferences();
+                }
             }
         }
 
-        // RecyclerView 어댑터 설정
-        adapter = new RoutineAdapter(routineList);
-        recyclerView.setAdapter(adapter);
-
-        // 스와이프 삭제 활성화
         enableSwipeToDelete();
 
-        // 플러스 버튼 클릭 시 동작 설정
-        ImageButton inRtnListPlusBtn = view.findViewById(R.id.in_RtnList_new_Button);
-        inRtnListPlusBtn.setOnClickListener(v -> {
-            Intent intent2 = new Intent(getActivity(), RoutineRecommandFragment.class);
-            startActivity(intent2);
+        // 플러스 버튼으로 RoutineRecommandFragment로 이동
+        ImageButton in_rtnList_plus_btn = view.findViewById(R.id.in_RtnList_new_Button);
+        in_rtnList_plus_btn.setOnClickListener(v -> {
+            Fragment fragment = new RoutineRecommandFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         return view;
     }
 
     private void loadRoutinesFromPreferences() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("RoutinePrefs", getActivity().MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("RoutinePrefs", Context.MODE_PRIVATE);
         String routinesData = sharedPreferences.getString("routines", "");
+
+        routineList.clear(); // 기존 리스트 초기화
 
         if (!routinesData.isEmpty()) {
             String[] routines = routinesData.split("\\|");
             for (String routine : routines) {
                 String[] parts = routine.split(";");
-                if (parts.length == 7) { // 데이터 개수 확인
-                    routineList.add(new Routine(parts[0], parts[1], parts[2], Boolean.parseBoolean(parts[5]), parts[3], parts[4], parts[6]));
+                if (parts.length == 6) {
+                    routineList.add(new Routine(parts[0], parts[1], parts[2], true, parts[3], parts[4], parts[5]));
                 }
             }
         }
     }
 
-    private boolean isRoutineAlreadyInList(String name, String memo, String time, String days, String color) {
-        for (Routine routine : routineList) {
-            if (routine.getName().equals(name)
-                    && routine.getMemo().equals(memo)
-                    && routine.getTime().equals(time)
-                    && routine.getDays().equals(days)
-                    && routine.getColor().equals(color)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+
+
 
     private void saveRoutinesToPreferences() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("RoutinePrefs", getActivity().MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("RoutinePrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         StringBuilder routinesData = new StringBuilder();
@@ -161,23 +159,27 @@ public class RoutineListFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                routineList.remove(position);
-                adapter.notifyItemRemoved(position);
-                saveRoutinesToPreferences();
-            }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-                View itemView = viewHolder.itemView;
-                Paint paint = new Paint();
-                paint.setColor(dX > 0 ? Color.GREEN : Color.RED);
-                c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom(), paint);
+                routineList.remove(position); // 리스트에서 제거
+                adapter.notifyItemRemoved(position); // RecyclerView 업데이트
+                saveRoutinesToPreferences(); // SharedPreferences 업데이트
+                Toast.makeText(context, "루틴이 삭제되었습니다!", Toast.LENGTH_SHORT).show();
             }
         };
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+    }
+
+
+    private boolean isRoutineAlreadyInList(String name, String memo, String time, String days, String color) {
+        for (Routine routine : routineList) {
+            if (routine.getName().equals(name) &&
+                    routine.getMemo().equals(memo) &&
+                    routine.getTime().equals(time) &&
+                    routine.getDays().equals(days) &&
+                    routine.getColor().equals(color)) {
+                return true; // 중복된 루틴이 존재
+            }
+        }
+        return false;
     }
 }

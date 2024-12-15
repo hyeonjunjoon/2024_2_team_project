@@ -1,7 +1,6 @@
 package com.example.dalendar;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.example.dalendar.databinding.FragmentWeekdetailBinding;
-
 import java.util.ArrayList;
 
 public class WeekDetailFragment extends Fragment {
@@ -57,12 +53,23 @@ public class WeekDetailFragment extends Fragment {
         detail_6dateTv.setText(weekDates.get(5));
         detail_7dateTv.setText(weekDates.get(6));
 
-
-
-
-
-
+        detail_1dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(0)));
+        detail_2dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(1)));
+        detail_3dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(2)));
+        detail_4dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(3)));
+        detail_5dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(4)));
+        detail_6dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(5)));
+        detail_7dateTv.setOnClickListener(v ->  openTaskDetailFragment(weekDates.get(6)));
 
     } //onViewCreated
+
+    private void openTaskDetailFragment(String date) {
+        ScheduleDetailFragment fragment = ScheduleDetailFragment.newInstance(date);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.weekDetailFragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
 
 }

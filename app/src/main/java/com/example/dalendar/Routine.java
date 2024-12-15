@@ -10,6 +10,8 @@ public class Routine {
     private String days;
     private String color;
     private String imagePath;
+    private int id; // 알람 ID를 위한 필드 추가
+
 
     // 기본 생성자
     public Routine() {
@@ -18,8 +20,9 @@ public class Routine {
         this.time = "";
         this.isEnabled = false;
         this.days = "";
-        this.color = "#FFFFFF"; // 기본 색상
-        this.imagePath =imagePath ;
+        this.color = "#FFFFFF";
+        this.imagePath = "";
+        this.id = (int) System.currentTimeMillis(); // 기본 ID 설정
     }
 
     // 생성자 (이미지 경로 포함)
@@ -31,14 +34,13 @@ public class Routine {
         this.days = days;
         this.color = color;
         this.imagePath = imagePath;
-    }
-
-    // 생성자 (이미지 경로 미포함, 기본값 "")
-    public Routine(String name, String memo, String time, boolean isAlarmEnabled, String days, String color) {
-        this(name, memo, time, isAlarmEnabled, days, color, "");
+        this.id = (int) System.currentTimeMillis(); // 생성 시 고유 ID 생성
     }
 
     // Getter와 Setter
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
     public String getName() { return actName; }
     public void setName(String name) { this.actName = name; }
 
@@ -49,7 +51,8 @@ public class Routine {
     public void setTime(String time) { this.time = time; }
 
     public boolean isEnabled() { return isEnabled; }
-    public void setEnabled(boolean alarmEnabled) { isEnabled = isEnabled; }
+    public void setEnabled(boolean enabled) { this.isEnabled = enabled; }
+
 
     public String getDays() { return days; }
     public void setDays(String days) { this.days = days; }

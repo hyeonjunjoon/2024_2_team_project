@@ -1,70 +1,23 @@
 package com.example.dalendar;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RoutineRecommandFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RoutineRecommandFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RoutineRecommandFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RoutineRecommandFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RoutineRecommandFragment newInstance(String param1, String param2) {
-        RoutineRecommandFragment fragment = new RoutineRecommandFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Nullable
     @Override
@@ -74,6 +27,29 @@ public class RoutineRecommandFragment extends Fragment {
         TextView category1 = view.findViewById(R.id.in_RtnRecommand_hobby_text1);
         TextView category2 = view.findViewById(R.id.in_RtnRecommand_hobby_text2);
         TextView category3 = view.findViewById(R.id.in_RtnRecommand_hobby_text3);
+
+        // 카드뷰 참조
+        CardView cardView1 = view.findViewById(R.id.in_RtnRecommand_CardView1);
+        CardView cardView2 = view.findViewById(R.id.in_RtnRecommand_CardView2);
+        CardView cardView3 = view.findViewById(R.id.in_RtnRecommand_CardView3);
+
+        int[] colors = {
+                0xFFB05B6D, 0xFFD1A0B5, 0xFFC3A3B7, 0xFF9B8B9B, 0xFF7A4F7C,
+                0xFF4B3A4B, 0xFFA4B863, 0xFFD3D8A0, 0xFFC2C5B4, 0xFFB1C2A8,
+                0xFF9FB1B1, 0xFF5B7A7B, 0xFF3D4D4D, 0xFF3F4D4D, 0xFF5B6B8B,
+                0xFF5C6E7B, 0xFF5A7B8A, 0xFF4D5D7A, 0xFF3E3F4B, 0xFF6A6B6B,
+                0xFF7B7B7F, 0xFF8B8B8B, 0xFF8C6B6B, 0xFF5D5D5D, 0xFF4B4A4B,
+                0xFF4C4C4C, 0xFF3B3B3B, 0xFF2E2E2E, 0xFF1A1A1A, 0xFF0D0D0D,
+                0xFF7F8B7B, 0xFFB3A5B3, 0xFF7F6B7F, 0xFF5D4B5D, 0xFF3E3A3B,
+                0xFF4B7A6B, 0xFF5A7B7B, 0xFF7F6B7B, 0xFF7B5E7B
+        };
+
+        Random random = new Random();
+
+        // 카드뷰에 무작위 색상 설정
+        cardView1.setCardBackgroundColor(colors[random.nextInt(colors.length)]);
+        cardView2.setCardBackgroundColor(colors[random.nextInt(colors.length)]);
+        cardView3.setCardBackgroundColor(colors[random.nextInt(colors.length)]);
 
         // 카드뷰 클릭 이벤트
         CardView in_RtnRecommand_card1 = view.findViewById(R.id.in_RtnRecommand_CardView1);
@@ -92,24 +68,20 @@ public class RoutineRecommandFragment extends Fragment {
         return view;
     }
 
-    // Routine_Maker로 이동하는 메서드
+    // RoutineMakerFragment로 이동하는 메서드
     private void openRoutineMaker(String selectedCategory) {
         RoutineMakerFragment routineMakerFragment = new RoutineMakerFragment();
 
-        // 데이터 전달을 위해 Bundle 생성
-        Bundle args = new Bundle();
-        args.putString("selectedHobby", selectedCategory);
+        // 선택된 카테고리 전달
+        Bundle bundle = new Bundle();
+        bundle.putString("selectedHobby", selectedCategory);
+        routineMakerFragment.setArguments(bundle);
 
-        // Bundle을 Fragment에 설정
-        routineMakerFragment.setArguments(args);
-
-        // Fragment 교체
-        getActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, routineMakerFragment)
-                .addToBackStack(null) // 뒤로 가기 지원
-                .commit();
+        // 프래그먼트 교체
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, routineMakerFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // 새로고침 기능
@@ -176,6 +148,7 @@ public class RoutineRecommandFragment extends Fragment {
                 "몸과 마음의 균형을 맞추며 유연성을 기를 수 있는 좋은 방법입니다.",
                 "자신만의 스타일을 표현할 수 있는 악세사리를 만들어보세요.",
                 "디지털 소프트웨어를 사용하여 자신만의 곡을 만들어보는 재미가 있습니다."
+
         };
 
         int[] colors = {
@@ -189,6 +162,8 @@ public class RoutineRecommandFragment extends Fragment {
                 0xFF4B7A6B, 0xFF5A7B7B, 0xFF7F6B7B, 0xFF7B5E7B
         };
 
+
+
         Random random = new Random();
         Set<Integer> usedIndexes = new HashSet<>();
 
@@ -198,11 +173,11 @@ public class RoutineRecommandFragment extends Fragment {
         // 두 번째 카드뷰
         updateCardView(view, R.id.in_RtnRecommand_CardView2, R.id.in_RtnRecommand_hobby_text2, R.id.in_RtnRecommand_hobby_descript2, hobbies, descriptions, colors, random, usedIndexes);
 
-        // 세 번째 카드뷰
-        updateCardView(view, R.id.in_RtnRecommand_CardView3, R.id.in_RtnRecommand_hobby_text3, R.id.in_RtnRecommand_hobby_descript3, hobbies, descriptions, colors, random, usedIndexes);
+        // 세 번째 카드뷰는 색상만 변경
+        CardView cardView3 = view.findViewById(R.id.in_RtnRecommand_CardView3);
+        cardView3.setCardBackgroundColor(colors[random.nextInt(colors.length)]);
     }
 
-    // 카드뷰 업데이트 메서드
     private void updateCardView(View view, int cardViewId, int hobbyTextId, int hobbyDescriptId, String[] hobbies, String[] descriptions, int[] colors, Random random, Set<Integer> usedIndexes) {
         CardView cardView = view.findViewById(cardViewId);
         TextView hobbyText = view.findViewById(hobbyTextId);
